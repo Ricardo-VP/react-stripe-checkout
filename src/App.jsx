@@ -1,4 +1,3 @@
-import "./App.css";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
@@ -6,6 +5,9 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+
+import "bootswatch/dist/lux/bootstrap.min.css";
+import "./App.css";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
 
