@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
@@ -5,6 +6,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import axios from "axios";
 
 import "bootswatch/dist/lux/bootstrap.min.css";
 import "./App.css";
@@ -14,6 +16,7 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,6 +25,27 @@ const CheckoutForm = () => {
       type: "card",
       card: elements.getElement(CardElement),
     });
+    setLoading(true);
+
+    if (!error) {
+      const { id } = paymentMethod;
+
+      try {
+        const { data } = await axios.post(
+          "http://localhost:3001/api/checkout",
+          {
+            id,
+            amount: 10000,
+          }
+        );
+
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+
+      setLoading(false);
+    }
   };
 
   return (
@@ -31,16 +55,24 @@ const CheckoutForm = () => {
         alt="Mechanical keyboard"
         className="img-fluid"
       />
+      <h3 className="text-center my-2">Price: $100</h3>
       <div className="form-group">
         <CardElement className="form-control" />
       </div>
-      <button className="btn btn-success">Buy</button>
+      <button disabled={!stripe || loading} className="btn btn-success">
+        {loading ? (
+          <div className="spinner-borde text-light" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        ) : (
+          "Buy"
+        )}
+      </button>
     </form>
   );
 };
 
 function App() {
-  console.log(import.meta.env.VITE_STRIPE_KEY);
   return (
     <Elements stripe={stripePromise}>
       <div className="container p-4">
