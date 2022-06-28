@@ -25,9 +25,16 @@ const CheckoutForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <CardElement />
-      <button>Buy</button>
+    <form onSubmit={handleSubmit} className="card card-body">
+      <img
+        src="https://maxellbajio.com/1135-large_default/mechanical-gaming-keyboard.jpg"
+        alt="Mechanical keyboard"
+        className="img-fluid"
+      />
+      <div className="form-group">
+        <CardElement className="form-control" />
+      </div>
+      <button className="btn btn-success">Buy</button>
     </form>
   );
 };
@@ -36,7 +43,15 @@ function App() {
   console.log(import.meta.env.VITE_STRIPE_KEY);
   return (
     <Elements stripe={stripePromise}>
-      <CheckoutForm />
+      <div className="container p-4">
+        <div className="row">
+          <div className="col-md-4 offset-md-4">
+            <div className="form-group">
+              <CheckoutForm className="form-control" />
+            </div>
+          </div>
+        </div>
+      </div>
     </Elements>
   );
 }
